@@ -1,5 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Api_bd.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace Api_bd.Controllers
 {
@@ -8,25 +13,40 @@ namespace Api_bd.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _service;
+        private readonly IConfiguration _configuration;
 
-        public UsuarioController(IUsuarioService service)
+        public UsuarioController(IUsuarioService service, IConfiguration configuration)
         {
             _service = service;
+            _configuration = configuration;
         }
 
-
         [HttpGet]
-        public ActionResult<List<Usuario>> GetAll()
+        public IActionResult GetAll()
         {
-            return Ok(_service.GetAll());
+            var usuarios = _service.GetAll()
+                .Select(u => new UsuarioDto
+                {
+                    Id = u.Id,
+                    Nome = u.Nome,
+                    Email = u.Email
+                });
+
+            return Ok(usuarios);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Usuario> GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var usuario = _service.GetById(id);
-            if (usuario == null) return NotFound();
-            return Ok(usuario);
+            var u = _service.GetById(id);
+            if (u == null) return NotFound();
+
+            return Ok(new UsuarioDto
+            {
+                Id = u.Id,
+                Nome = u.Nome,
+                Email = u.Email
+            });
         }
 
         [HttpPost]
@@ -57,6 +77,7 @@ namespace Api_bd.Controllers
 
             return Ok("Deletado!");
         }
+
         [HttpPost("login")]
         public IActionResult Login([FromBody] Usuario login)
         {
@@ -65,8 +86,39 @@ namespace Api_bd.Controllers
             if (usuario == null)
                 return Unauthorized("Email ou senha incorretos.");
 
-            return Ok("Logado com sucesso!");
-        }
+            // pega a chave do appsettings
+            var chave = _configuration["Jwt:SigningKey"];
+            if (string.IsNullOrWhiteSpace(chave))
+                return StatusCode(500, "Chave JWT não configurada.");
 
+            // gera o token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(chave);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim("id", usuario.Id.ToString()),
+                    new Claim(ClaimTypes.Email, usuario.Email!)
+                    // adicione roles/claims adicionais se quiser
+                }),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new
+            {
+                mensagem = "Logado com sucesso!",
+                token = tokenString,
+                usuario = usuario.Nome
+            });
+        }
     }
 }

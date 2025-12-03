@@ -172,3 +172,6 @@ C:\Users\Evellyn\Desktop\Api_bd\obj\Debug\net9.0\refint\Api_bd.dll
 C:\Users\Evellyn\Desktop\Api_bd\obj\Debug\net9.0\Api_bd.pdb
 C:\Users\Evellyn\Desktop\Api_bd\obj\Debug\net9.0\Api_bd.genruntimeconfig.cache
 C:\Users\Evellyn\Desktop\Api_bd\obj\Debug\net9.0\ref\Api_bd.dll
+C:\Users\Evellyn\Desktop\Api_bd\obj\Debug\net9.0\Api_bd.sourcelink.json
+C:\Users\Evellyn\Desktop\Api_bd\bin\Debug\net9.0\BCrypt.Net-Next.dll
+C:\Users\Evellyn\Desktop\Api_bd\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

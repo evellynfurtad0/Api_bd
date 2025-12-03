@@ -70,4 +70,3 @@ namespace Api_bd.Services
         }
     }
 }
-

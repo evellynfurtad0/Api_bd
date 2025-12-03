@@ -10,3 +10,5 @@ CREATE TABLE Usuarios_Sistema (
     Email NVARCHAR(100) NOT NULL UNIQUE
 );
 GO
+-- ALTER TABLE Usuarios_Sistema
+-- ADD Senha NVARCHAR(200) NOT NULL DEFAULT('');
