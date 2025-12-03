@@ -12,4 +12,5 @@ public class Usuario
 
     [Required, MinLength(3)]
     public string Senha { get; set; } = string.Empty;
+    public string Role { get; set; } = "User";
 }

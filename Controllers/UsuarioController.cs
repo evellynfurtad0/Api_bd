@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -21,6 +22,7 @@ namespace Api_bd.Controllers
             _configuration = configuration;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -35,6 +37,7 @@ namespace Api_bd.Controllers
             return Ok(usuarios);
         }
 
+        [Authorize(Roles = "Admin,Gestor")]
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -59,6 +62,7 @@ namespace Api_bd.Controllers
             return Ok(result.Usuario);
         }
 
+        [Authorize(Roles = "Admin,Gestor")]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Usuario usuario)
         {
@@ -68,7 +72,8 @@ namespace Api_bd.Controllers
 
             return Ok(result.Usuario);
         }
-
+        
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -77,7 +82,8 @@ namespace Api_bd.Controllers
 
             return Ok("Deletado!");
         }
-
+        
+        [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login([FromBody] Usuario login)
         {
@@ -100,8 +106,10 @@ namespace Api_bd.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("id", usuario.Id.ToString()),
-                    new Claim(ClaimTypes.Email, usuario.Email!)
+                    new Claim(ClaimTypes.Email, usuario.Email),
+                    new Claim(ClaimTypes.Role, usuario.Role)
                 }),
+
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
