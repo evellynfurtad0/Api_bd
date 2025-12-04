@@ -107,7 +107,7 @@ namespace Api_bd.Controllers
                 {
                     new Claim("id", usuario.Id.ToString()),
                     new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim(ClaimTypes.Role, usuario.Role)
+                    new Claim(ClaimTypes.Role, usuario.Role.ToString())
                 }),
 
                 Expires = DateTime.UtcNow.AddHours(2),

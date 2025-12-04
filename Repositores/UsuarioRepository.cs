@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient; 
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
 namespace Api_bd.Repositories
@@ -26,13 +26,17 @@ namespace Api_bd.Repositories
 
             while (reader.Read())
             {
-                usuarios.Add(new Usuario
+                var usuario = new Usuario
                 {
                     Id = reader.GetInt32(0),
                     Nome = reader.GetString(1),
                     Email = reader.GetString(2),
-                    Role = reader.GetString(4)
-                });
+                    Senha = reader.GetString(3)
+                };
+
+                usuario.Role = usuario.Role = (RoleType)reader.GetInt32(4);
+
+                usuarios.Add(usuario);
             }
 
             return usuarios;
@@ -52,14 +56,17 @@ namespace Api_bd.Repositories
 
             if (!reader.Read()) return null;
 
-            return new Usuario
+            var usuario = new Usuario
             {
                 Id = reader.GetInt32(0),
                 Nome = reader.GetString(1),
                 Email = reader.GetString(2),
-                Senha = reader.GetString(3),
-                Role = reader.GetString(4)
+                Senha = reader.GetString(3)
             };
+
+            usuario.Role = usuario.Role = (RoleType)reader.GetInt32(4);
+
+            return usuario;
         }
 
         public Usuario Create(Usuario usuario)
@@ -75,7 +82,7 @@ namespace Api_bd.Repositories
             cmd.Parameters.AddWithValue("@Nome", usuario.Nome);
             cmd.Parameters.AddWithValue("@Email", usuario.Email);
             cmd.Parameters.AddWithValue("@Senha", usuario.Senha);
-            cmd.Parameters.AddWithValue("@Role", usuario.Role);
+            cmd.Parameters.AddWithValue("@Role", (int)usuario.Role);
 
             var result = cmd.ExecuteScalar();
             usuario.Id = Convert.ToInt32(result);
@@ -92,12 +99,11 @@ namespace Api_bd.Repositories
                SET Nome = @Nome, Email = @Email, Senha = @Senha, Role = @Role
                WHERE Id = @Id";
 
-
             using var cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@Nome", usuario.Nome);
             cmd.Parameters.AddWithValue("@Email", usuario.Email);
             cmd.Parameters.AddWithValue("@Senha", usuario.Senha);
-            cmd.Parameters.AddWithValue("@Role", usuario.Role);
+            cmd.Parameters.AddWithValue("@Role", (int)usuario.Role);
             cmd.Parameters.AddWithValue("@Id", id);
 
             int rows = cmd.ExecuteNonQuery();
@@ -106,6 +112,7 @@ namespace Api_bd.Repositories
             usuario.Id = id;
             return usuario;
         }
+
         public Usuario? Login(string email, string senha)
         {
             using var con = new SqlConnection(_connectionString);
@@ -123,16 +130,18 @@ namespace Api_bd.Repositories
 
             if (!reader.Read()) return null;
 
-            return new Usuario
+            var usuario = new Usuario
             {
                 Id = reader.GetInt32(0),
                 Nome = reader.GetString(1),
                 Email = reader.GetString(2),
-                Senha = reader.GetString(3),
-                Role = reader.GetString(4)
+                Senha = reader.GetString(3)
             };
-        }
 
+            usuario.Role = (RoleType)reader.GetInt32(4);
+
+            return usuario;
+        }
 
         public bool Delete(int id)
         {

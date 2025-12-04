@@ -10,6 +10,5 @@ namespace Api_bd.Services
         (bool IsSuccess, string? ErrorMessage, Usuario? Usuario) Update(int id, Usuario usuario);
         bool Delete(int id);
         Usuario? Login(string email, string senha);
-
     }
 }
