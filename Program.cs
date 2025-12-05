@@ -53,9 +53,16 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// INJEÇÃO DE DEPENDÊNCIA
+// INJEÇÃO DE DEPENDÊNCIA / todos os Repositórios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+builder.Services.AddScoped<IModuloRepository, ModuloRepository>();
+builder.Services.AddScoped<IAulaRepository, AulaRepository>();
+builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
+builder.Services.AddScoped<IAtribuicaoCursoRepository, AtribuicaoCursoRepository>();
+builder.Services.AddScoped<IProgressoCursoRepository, ProgressoCursoRepository>();
+
 
 var app = builder.Build();
 

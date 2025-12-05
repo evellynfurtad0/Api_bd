@@ -12,5 +12,12 @@ public class Usuario
 
     [Required, MinLength(3)]
     public string Senha { get; set; } = string.Empty;
-    public RoleType Role { get; set; } = RoleType.Funcionario;
+
+    public string? CPF { get; set; } = null;
+
+    public DateTime? DataNascimento { get; set; } = null;
+
+    public int? GestorId { get; set; }
+
+    public PerfilEnum Perfil { get; set; } = PerfilEnum.Funcionario;
 }

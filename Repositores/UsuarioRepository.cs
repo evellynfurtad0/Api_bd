@@ -19,7 +19,8 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = "SELECT Id, Nome, Email, Senha, Role FROM Usuarios_Sistema";
+            string sql = @"SELECT Id, Nome, Email, Senha, Perfil, CPF, DataNascimento, GestorId 
+                           FROM Usuarios_Sistema";
 
             using var cmd = new SqlCommand(sql, con);
             using var reader = cmd.ExecuteReader();
@@ -31,10 +32,14 @@ namespace Api_bd.Repositories
                     Id = reader.GetInt32(0),
                     Nome = reader.GetString(1),
                     Email = reader.GetString(2),
-                    Senha = reader.GetString(3)
-                };
+                    Senha = reader.GetString(3),
 
-                usuario.Role = usuario.Role = (RoleType)reader.GetInt32(4);
+                    Perfil = (PerfilEnum)reader.GetInt32(4),
+
+                    CPF = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    DataNascimento = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
+                    GestorId = reader.IsDBNull(7) ? null : reader.GetInt32(7)
+                };
 
                 usuarios.Add(usuario);
             }
@@ -47,7 +52,9 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = "SELECT Id, Nome, Email, Senha, Role FROM Usuarios_Sistema WHERE Id = @Id";
+            string sql = @"SELECT Id, Nome, Email, Senha, Perfil, CPF, DataNascimento, GestorId 
+                           FROM Usuarios_Sistema 
+                           WHERE Id = @Id";
 
             using var cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@Id", id);
@@ -61,10 +68,14 @@ namespace Api_bd.Repositories
                 Id = reader.GetInt32(0),
                 Nome = reader.GetString(1),
                 Email = reader.GetString(2),
-                Senha = reader.GetString(3)
-            };
+                Senha = reader.GetString(3),
 
-            usuario.Role = usuario.Role = (RoleType)reader.GetInt32(4);
+                Perfil = (PerfilEnum)reader.GetInt32(4),
+
+                CPF = reader.IsDBNull(5) ? null : reader.GetString(5),
+                DataNascimento = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
+                GestorId = reader.IsDBNull(7) ? null : reader.GetInt32(7)
+            };
 
             return usuario;
         }
@@ -74,15 +85,23 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"INSERT INTO Usuarios_Sistema (Nome, Email, Senha, Role)
-                           VALUES (@Nome, @Email, @Senha, @Role);
-                           SELECT SCOPE_IDENTITY();";
+            string sql = @"
+                INSERT INTO Usuarios_Sistema 
+                (Nome, Email, Senha, Perfil, CPF, DataNascimento, GestorId)
+                VALUES 
+                (@Nome, @Email, @Senha, @Perfil, @CPF, @DataNascimento, @GestorId);
+                SELECT SCOPE_IDENTITY();";
 
             using var cmd = new SqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@Nome", usuario.Nome);
             cmd.Parameters.AddWithValue("@Email", usuario.Email);
             cmd.Parameters.AddWithValue("@Senha", usuario.Senha);
-            cmd.Parameters.AddWithValue("@Role", (int)usuario.Role);
+            cmd.Parameters.AddWithValue("@Perfil", (int)usuario.Perfil);
+
+            cmd.Parameters.AddWithValue("@CPF", (object?)usuario.CPF ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@DataNascimento", (object?)usuario.DataNascimento ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@GestorId", (object?)usuario.GestorId ?? DBNull.Value);
 
             var result = cmd.ExecuteScalar();
             usuario.Id = Convert.ToInt32(result);
@@ -95,15 +114,29 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"UPDATE Usuarios_Sistema 
-               SET Nome = @Nome, Email = @Email, Senha = @Senha, Role = @Role
-               WHERE Id = @Id";
+            string sql = @"
+                UPDATE Usuarios_Sistema 
+                SET 
+                    Nome = @Nome, 
+                    Email = @Email, 
+                    Senha = @Senha, 
+                    Perfil = @Perfil,
+                    CPF = @CPF,
+                    DataNascimento = @DataNascimento,
+                    GestorId = @GestorId
+                WHERE Id = @Id";
 
             using var cmd = new SqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@Nome", usuario.Nome);
             cmd.Parameters.AddWithValue("@Email", usuario.Email);
             cmd.Parameters.AddWithValue("@Senha", usuario.Senha);
-            cmd.Parameters.AddWithValue("@Role", (int)usuario.Role);
+            cmd.Parameters.AddWithValue("@Perfil", (int)usuario.Perfil);
+
+            cmd.Parameters.AddWithValue("@CPF", (object?)usuario.CPF ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@DataNascimento", (object?)usuario.DataNascimento ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@GestorId", (object?)usuario.GestorId ?? DBNull.Value);
+
             cmd.Parameters.AddWithValue("@Id", id);
 
             int rows = cmd.ExecuteNonQuery();
@@ -118,9 +151,10 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"SELECT Id, Nome, Email, Senha, Role
-                        FROM Usuarios_Sistema
-                        WHERE Email = @Email AND Senha = @Senha";
+            string sql = @"
+                SELECT Id, Nome, Email, Senha, Perfil, CPF, DataNascimento, GestorId
+                FROM Usuarios_Sistema
+                WHERE Email = @Email AND Senha = @Senha";
 
             using var cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@Email", email);
@@ -135,10 +169,14 @@ namespace Api_bd.Repositories
                 Id = reader.GetInt32(0),
                 Nome = reader.GetString(1),
                 Email = reader.GetString(2),
-                Senha = reader.GetString(3)
-            };
+                Senha = reader.GetString(3),
 
-            usuario.Role = (RoleType)reader.GetInt32(4);
+                Perfil = (PerfilEnum)reader.GetInt32(4),
+
+                CPF = reader.IsDBNull(5) ? null : reader.GetString(5),
+                DataNascimento = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
+                GestorId = reader.IsDBNull(7) ? null : reader.GetInt32(7)
+            };
 
             return usuario;
         }

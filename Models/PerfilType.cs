@@ -1,6 +1,6 @@
-public enum RoleType
+public enum PerfilEnum
 {
     Funcionario = 1,
     Gestor = 2,
-    Admin = 3
+    Admin = 3,
 }

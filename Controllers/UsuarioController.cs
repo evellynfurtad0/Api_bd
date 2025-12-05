@@ -72,7 +72,7 @@ namespace Api_bd.Controllers
 
             return Ok(result.Usuario);
         }
-        
+
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -82,7 +82,7 @@ namespace Api_bd.Controllers
 
             return Ok("Deletado!");
         }
-        
+
         [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login([FromBody] Usuario login)
@@ -107,7 +107,7 @@ namespace Api_bd.Controllers
                 {
                     new Claim("id", usuario.Id.ToString()),
                     new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim(ClaimTypes.Role, usuario.Role.ToString())
+                    new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
                 }),
 
                 Expires = DateTime.UtcNow.AddHours(2),
