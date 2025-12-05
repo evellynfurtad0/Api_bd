@@ -52,6 +52,7 @@ namespace Api_bd.Controllers
             });
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Add([FromBody] Usuario usuario)
         {

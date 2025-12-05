@@ -101,7 +101,7 @@ namespace Api_bd.Repositories
 
             cmd.Parameters.AddWithValue("@CPF", (object?)usuario.CPF ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@DataNascimento", (object?)usuario.DataNascimento ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@GestorId", (object?)usuario.GestorId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@GestorId",usuario.GestorId == null || usuario.GestorId == 0 ? DBNull.Value : usuario.GestorId);
 
             var result = cmd.ExecuteScalar();
             usuario.Id = Convert.ToInt32(result);
@@ -135,7 +135,7 @@ namespace Api_bd.Repositories
 
             cmd.Parameters.AddWithValue("@CPF", (object?)usuario.CPF ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@DataNascimento", (object?)usuario.DataNascimento ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@GestorId", (object?)usuario.GestorId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@GestorId", usuario.GestorId == null || usuario.GestorId == 0 ? DBNull.Value : usuario.GestorId);
 
             cmd.Parameters.AddWithValue("@Id", id);
 
