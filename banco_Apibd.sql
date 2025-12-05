@@ -85,7 +85,5 @@ ALTER TABLE Usuarios_Sistema
 ALTER COLUMN GestorId INT NULL;
 
 ALTER TABLE Usuarios_Sistema
-ADD CONSTRAINT FK_Usuarios_Gestor
-FOREIGN KEY (GestorId)
-REFERENCES Usuarios_Sistema(Id);
+ADD CONSTRAINT FK_Usuarios_Gestor FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id);
 
