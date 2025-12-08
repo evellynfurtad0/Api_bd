@@ -4,21 +4,18 @@ GO
 USE ApiBD;
 GO
 
-CREATE TABLE Usuarios_Sisstema (
+CREATE TABLE Usuarios_Sistema (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Nome NVARCHAR(100) NOT NULL,
-    Email NVARCHAR(100) NOT NULL UNIQUE
+    Senha NVARCHAR(200) NOT NULL,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    CPF VARCHAR(14) NULL,
+    DataNascimento DATE NULL,
+    GestorId INT NULL,
+    CONSTRAINT FK_Usuarios_Gestor 
+    FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id)
 );
 GO
-ALTER TABLE Usuarios_Sistema
-ADD CPF VARCHAR(14) NULL,
-    DataNascimento DATE NULL,
-    GestorId INT NULL;
-
-ALTER TABLE Usuarios_Sistema
-ADD CONSTRAINT FK_Usuarios_Gestor
-FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id);
-
 
 CREATE TABLE Curso (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -80,10 +77,3 @@ CREATE TABLE AtribuicaoCurso (
     FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id),
     FOREIGN KEY (CursoId) REFERENCES Curso(Id)
 );
-
-ALTER TABLE Usuarios_Sistema
-ALTER COLUMN GestorId INT NULL;
-
-ALTER TABLE Usuarios_Sistema
-ADD CONSTRAINT FK_Usuarios_Gestor FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id);
-

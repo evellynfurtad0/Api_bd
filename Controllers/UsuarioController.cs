@@ -86,7 +86,7 @@ namespace Api_bd.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] Usuario login)
+        public IActionResult Login([FromBody] LoginDto login)
         {
             var usuario = _service.Login(login.Email!, login.Senha!);
 
