@@ -17,6 +17,21 @@ CREATE TABLE Usuarios_Sistema (
 );
 GO
 
+CREATE TABLE Departamento (
+  Id INT IDENTITY(1,1) PRIMARY KEY,
+  Nome VARCHAR(100) NOT NULL,
+  Descricao VARCHAR(100) NULL
+);
+
+CREATE TABLE DepartamentoUsuario (
+  Id INT IDENTITY(1,1) PRIMARY KEY,
+  Usuarios_SistemaId INT NOT NULL,
+  DepartamentoId INT NOT NULL,
+
+  FOREIGN KEY (Usuarios_SistemaId) REFERENCES Usuarios_Sistema(Id),
+  FOREIGN KEY (DepartamentoId) REFERENCES Departamento(Id)
+);
+
 CREATE TABLE Curso (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Titulo VARCHAR(40) NOT NULL,
@@ -73,7 +88,9 @@ CREATE TABLE AtribuicaoCurso (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     GestorId INT NOT NULL,
     CursoId INT NOT NULL,
-
+    DepartamentoId INT NULL,
     FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id),
-    FOREIGN KEY (CursoId) REFERENCES Curso(Id)
+    FOREIGN KEY (CursoId) REFERENCES Curso(Id),
+    
+    CONSTRAINT FK_AtribuicaoCurso_Departamento FOREIGN KEY (DepartamentoId) REFERENCES Departamento(Id)
 );
