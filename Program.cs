@@ -62,7 +62,7 @@ builder.Services.AddScoped<IAulaRepository, AulaRepository>();
 builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
 builder.Services.AddScoped<IAtribuicaoCursoRepository, AtribuicaoCursoRepository>();
 builder.Services.AddScoped<IProgressoCursoRepository, ProgressoCursoRepository>();
-
+builder.Services.AddScoped<ICursoService, CursoService>();
 
 var app = builder.Build();
 

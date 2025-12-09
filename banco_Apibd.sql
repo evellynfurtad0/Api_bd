@@ -52,7 +52,7 @@ CREATE TABLE Modulo (
 
 CREATE TABLE Aula (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    Titulo VARCHAR(30) NOT NULL,
+    Titulo VARCHAR(200) NOT NULL,
     Conteudo VARCHAR(MAX) NULL,
     ChaveVideo VARCHAR(2000) NULL,
     Ordem INT NOT NULL,

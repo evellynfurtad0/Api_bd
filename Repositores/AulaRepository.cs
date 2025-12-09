@@ -31,8 +31,10 @@ namespace Api_bd.Repositories
                 {
                     Id = reader.GetInt32(0),
                     Titulo = reader.GetString(1),
-                    Conteudo = reader.GetString(2),
-                    ChaveVideo = reader.GetString(3),
+
+                    Conteudo = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    ChaveVideo = reader.IsDBNull(3) ? null : reader.GetString(3),
+
                     Ordem = reader.GetInt32(4),
                     ModuloId = reader.GetInt32(5)
                 });
@@ -60,8 +62,10 @@ namespace Api_bd.Repositories
             {
                 Id = reader.GetInt32(0),
                 Titulo = reader.GetString(1),
-                Conteudo = reader.GetString(2),
-                ChaveVideo = reader.GetString(3),
+
+                Conteudo = reader.IsDBNull(2) ? null : reader.GetString(2),
+                ChaveVideo = reader.IsDBNull(3) ? null : reader.GetString(3),
+
                 Ordem = reader.GetInt32(4),
                 ModuloId = reader.GetInt32(5)
             };
@@ -80,8 +84,13 @@ namespace Api_bd.Repositories
             using var cmd = new SqlCommand(sql, con);
 
             cmd.Parameters.AddWithValue("@Titulo", aula.Titulo);
-            cmd.Parameters.AddWithValue("@Conteudo", aula.Conteudo);
-            cmd.Parameters.AddWithValue("@ChaveVideo", aula.ChaveVideo);
+
+            cmd.Parameters.AddWithValue("@Conteudo",
+                string.IsNullOrEmpty(aula.Conteudo) ? (object)DBNull.Value : aula.Conteudo);
+
+            cmd.Parameters.AddWithValue("@ChaveVideo",
+                string.IsNullOrEmpty(aula.ChaveVideo) ? (object)DBNull.Value : aula.ChaveVideo);
+
             cmd.Parameters.AddWithValue("@Ordem", aula.Ordem);
             cmd.Parameters.AddWithValue("@ModuloId", aula.ModuloId);
 
@@ -106,8 +115,13 @@ namespace Api_bd.Repositories
             using var cmd = new SqlCommand(sql, con);
 
             cmd.Parameters.AddWithValue("@Titulo", aula.Titulo);
-            cmd.Parameters.AddWithValue("@Conteudo", aula.Conteudo);
-            cmd.Parameters.AddWithValue("@ChaveVideo", aula.ChaveVideo);
+
+            cmd.Parameters.AddWithValue("@Conteudo",
+                string.IsNullOrEmpty(aula.Conteudo) ? (object)DBNull.Value : aula.Conteudo);
+
+            cmd.Parameters.AddWithValue("@ChaveVideo",
+                string.IsNullOrEmpty(aula.ChaveVideo) ? (object)DBNull.Value : aula.ChaveVideo);
+
             cmd.Parameters.AddWithValue("@Ordem", aula.Ordem);
             cmd.Parameters.AddWithValue("@ModuloId", aula.ModuloId);
             cmd.Parameters.AddWithValue("@Id", id);
