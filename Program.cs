@@ -63,6 +63,11 @@ builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
 builder.Services.AddScoped<IAtribuicaoCursoRepository, AtribuicaoCursoRepository>();
 builder.Services.AddScoped<IProgressoCursoRepository, ProgressoCursoRepository>();
 builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<IDashboardFuncionarioService, DashboardFuncionarioService>();
+builder.Services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
+builder.Services.AddScoped<IGestorDashboardService, GestorDashboardService>();
+builder.Services.AddScoped<IDepartamentoUsuarioRepository, DepartamentoUsuarioRepository>();
+
 
 var app = builder.Build();
 

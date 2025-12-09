@@ -16,9 +16,11 @@ namespace Api_bd.Repositories
         {
             List<Usuario> usuarios = new();
 
+            //inicia a conexão com o banco
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
+            //consulta no banco
             string sql = @"SELECT Id, Nome, Email, Senha, Perfil, CPF, DataNascimento, GestorId 
                            FROM Usuarios_Sistema";
 

@@ -31,7 +31,7 @@ public class CursoController : ControllerBase
             if (m.Aulas.GroupBy(x => x.Ordem).Any(g => g.Count() > 1))
                 return BadRequest($"O módulo '{m.Titulo}' possui aulas com ordem duplicada.");
         }
-
+        //chama o service e cria o curso 
         var result = _service.CriarCursoCompleto(dto);
 
         if (!result.Success)

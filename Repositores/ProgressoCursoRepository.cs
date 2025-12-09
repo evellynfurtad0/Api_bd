@@ -19,7 +19,7 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"SELECT Id, UsuarioId, CursoId, ModuloId, AulaId, Status 
+            string sql = @"SELECT Id, Usuarios_SistemaId, CursoId, ModuloId, AulaId, Status 
                            FROM ProgressoCurso";
 
             using var cmd = new SqlCommand(sql, con);
@@ -30,7 +30,7 @@ namespace Api_bd.Repositories
                 progressos.Add(new ProgressoCurso
                 {
                     Id = reader.GetInt32(0),
-                    UsuarioId = reader.GetInt32(1),
+                    Usuarios_SistemaId = reader.GetInt32(1),
                     CursoId = reader.GetInt32(2),
                     ModuloId = reader.GetInt32(3),
                     AulaId = reader.GetInt32(4),
@@ -46,7 +46,7 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"SELECT Id, UsuarioId, CursoId, ModuloId, AulaId, Status 
+            string sql = @"SELECT Id, Usuarios_SistemaId, CursoId, ModuloId, AulaId, Status 
                            FROM ProgressoCurso 
                            WHERE Id = @Id";
 
@@ -60,7 +60,7 @@ namespace Api_bd.Repositories
             return new ProgressoCurso
             {
                 Id = reader.GetInt32(0),
-                UsuarioId = reader.GetInt32(1),
+                Usuarios_SistemaId = reader.GetInt32(1),
                 CursoId = reader.GetInt32(2),
                 ModuloId = reader.GetInt32(3),
                 AulaId = reader.GetInt32(4),
@@ -74,14 +74,14 @@ namespace Api_bd.Repositories
             con.Open();
 
             string sql = @"
-                INSERT INTO ProgressoCurso (UsuarioId, CursoId, ModuloId, AulaId, Status)
-                VALUES (@UsuarioId, @CursoId, @ModuloId, @AulaId, @Status);
+                INSERT INTO ProgressoCurso (Usuarios_SistemaId, CursoId, ModuloId, AulaId, Status)
+                VALUES (@Usuarios_SistemaId, @CursoId, @ModuloId, @AulaId, @Status);
                 SELECT SCOPE_IDENTITY();
             ";
 
             using var cmd = new SqlCommand(sql, con);
 
-            cmd.Parameters.AddWithValue("@UsuarioId", progresso.UsuarioId);
+            cmd.Parameters.AddWithValue("@Usuarios_SistemaId", progresso.Usuarios_SistemaId);
             cmd.Parameters.AddWithValue("@CursoId", progresso.CursoId);
             cmd.Parameters.AddWithValue("@ModuloId", progresso.ModuloId);
             cmd.Parameters.AddWithValue("@AulaId", progresso.AulaId);
@@ -98,7 +98,7 @@ namespace Api_bd.Repositories
 
             string sql = @"
                 UPDATE ProgressoCurso SET
-                    UsuarioId = @UsuarioId,
+                    Usuarios_SistemaId = @Usuarios_SistemaId,
                     CursoId = @CursoId,
                     ModuloId = @ModuloId,
                     AulaId = @AulaId,
@@ -107,7 +107,7 @@ namespace Api_bd.Repositories
 
             using var cmd = new SqlCommand(sql, con);
 
-            cmd.Parameters.AddWithValue("@UsuarioId", progresso.UsuarioId);
+            cmd.Parameters.AddWithValue("@Usuarios_SistemaId", progresso.Usuarios_SistemaId);
             cmd.Parameters.AddWithValue("@CursoId", progresso.CursoId);
             cmd.Parameters.AddWithValue("@ModuloId", progresso.ModuloId);
             cmd.Parameters.AddWithValue("@AulaId", progresso.AulaId);

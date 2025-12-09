@@ -68,8 +68,10 @@ namespace Api_bd.Repositories
             con.Open();
 
             string sql = @"
-                INSERT INTO AtribuicaoCurso (GestorId, CursoId)
-                VALUES (@GestorId, @CursoId);
+                INSERT INTO AtribuicaoCurso 
+                    (GestorId, CursoId, DepartamentoId)
+                VALUES 
+                    (@GestorId, @CursoId, @DepartamentoId);
                 SELECT SCOPE_IDENTITY();
             ";
 
@@ -77,6 +79,8 @@ namespace Api_bd.Repositories
 
             cmd.Parameters.AddWithValue("@GestorId", atrib.GestorId);
             cmd.Parameters.AddWithValue("@CursoId", atrib.CursoId);
+            cmd.Parameters.AddWithValue("@DepartamentoId",
+                atrib.DepartamentoId == null ? DBNull.Value : atrib.DepartamentoId);
 
             atrib.Id = Convert.ToInt32(cmd.ExecuteScalar());
             return atrib;
