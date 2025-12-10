@@ -7,6 +7,7 @@ namespace Api_bd.Services
     {
         private readonly IUsuarioRepository _repository;
 
+        //IJ - recebido do repositorio
         public UsuarioService(IUsuarioRepository repository)
         {
             _repository = repository;
@@ -22,6 +23,7 @@ namespace Api_bd.Services
             return _repository.GetById(id);
         }
 
+        //criação do usuario com validações
         public (bool IsSuccess, string? ErrorMessage, Usuario? Usuario) Create(Usuario usuario)
         {
             if (string.IsNullOrWhiteSpace(usuario.Nome))
@@ -37,6 +39,7 @@ namespace Api_bd.Services
             return (true, null, created);
         }
 
+        //validações para atualizar o usuario
         public (bool IsSuccess, string? ErrorMessage, Usuario? Usuario) Update(int id, Usuario usuario)
         {
             var existing = _repository.GetById(id);
@@ -59,11 +62,13 @@ namespace Api_bd.Services
             return (true, null, updated);
         }
 
+        //chama o método login
         public Usuario? Login(string email, string senha)
         {
             return _repository.Login(email, senha);
         }
 
+        //deleta o usuario pelo id
         public bool Delete(int id)
         {
             return _repository.Delete(id);

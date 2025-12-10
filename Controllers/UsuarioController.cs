@@ -63,7 +63,7 @@ namespace Api_bd.Controllers
             return Ok(result.Usuario);
         }
 
-        [Authorize(Roles = "Admin,Gestor")]
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Usuario usuario)
         {
@@ -88,6 +88,7 @@ namespace Api_bd.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto login)
         {
+            //verifica se a senha e email estão no banco
             var usuario = _service.Login(login.Email!, login.Senha!);
 
             if (usuario == null)
@@ -104,6 +105,7 @@ namespace Api_bd.Controllers
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                //define os dados que ficarão dentro do token JWT
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("id", usuario.Id.ToString()),
@@ -111,6 +113,7 @@ namespace Api_bd.Controllers
                     new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
                 }),
 
+                //tempo de expiração do token (2hrs)
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
@@ -121,6 +124,7 @@ namespace Api_bd.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
+            //retorna o token
             return Ok(new
             {
                 mensagem = "Logado com sucesso!",

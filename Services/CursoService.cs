@@ -1,5 +1,6 @@
 public class CursoService : ICursoService
 {
+    //repositorios sendo usados para acessar o banco de dados
     private readonly ICursoRepository _cursoRepo;
     private readonly IModuloRepository _moduloRepo;
     private readonly IAulaRepository _aulaRepo;
@@ -9,11 +10,13 @@ public class CursoService : ICursoService
         IModuloRepository moduloRepo,
         IAulaRepository aulaRepo)
     {
+        //IJ
         _cursoRepo = cursoRepo;
         _moduloRepo = moduloRepo;
         _aulaRepo = aulaRepo;
     }
 
+    //validações
     public (bool Success, string? Error, Curso? Curso) CriarCursoCompleto(CreateCursoDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Titulo))
@@ -22,7 +25,7 @@ public class CursoService : ICursoService
         if (dto.Modulos.Count > 30)
             return (false, "Um curso pode ter no máximo 30 módulos.", null);
 
-        // Cria o Curso
+        // Cria o Curso no banco
         var curso = _cursoRepo.Create(new Curso
         {
             Titulo = dto.Titulo,
@@ -30,12 +33,12 @@ public class CursoService : ICursoService
             Usuarios_SistemaId = dto.Usuarios_SistemaId
         });
 
-        // Cria modulos e aulas
         foreach (var mod in dto.Modulos)
         {
             if (mod.Aulas.Count > 100)
                 return (false, $"O módulo '{mod.Titulo}' excede o limite de 100 aulas.", null);
 
+            // Cria o módulo no banco
             var moduloCriado = _moduloRepo.Create(new Modulo
             {
                 Titulo = mod.Titulo,
@@ -43,6 +46,7 @@ public class CursoService : ICursoService
                 CursoId = curso.Id
             });
 
+            // Cria aulas do banco
             foreach (var aula in mod.Aulas)
             {
                 _aulaRepo.Create(new Aula

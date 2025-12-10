@@ -19,7 +19,7 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"SELECT Id, GestorId, CursoId 
+            string sql = @"SELECT Id, GestorId, CursoId, DepartamentoId 
                            FROM AtribuicaoCurso";
 
             using var cmd = new SqlCommand(sql, con);
@@ -31,7 +31,8 @@ namespace Api_bd.Repositories
                 {
                     Id = reader.GetInt32(0),
                     GestorId = reader.GetInt32(1),
-                    CursoId = reader.GetInt32(2)
+                    CursoId = reader.GetInt32(2),
+                    DepartamentoId = reader.IsDBNull(3) ? null : reader.GetInt32(3)
                 });
             }
 
@@ -43,7 +44,7 @@ namespace Api_bd.Repositories
             using var con = new SqlConnection(_connectionString);
             con.Open();
 
-            string sql = @"SELECT Id, GestorId, CursoId 
+            string sql = @"SELECT Id, GestorId, CursoId, DepartamentoId
                            FROM AtribuicaoCurso 
                            WHERE Id = @Id";
 
@@ -58,7 +59,8 @@ namespace Api_bd.Repositories
             {
                 Id = reader.GetInt32(0),
                 GestorId = reader.GetInt32(1),
-                CursoId = reader.GetInt32(2)
+                CursoId = reader.GetInt32(2),
+                DepartamentoId = reader.IsDBNull(3) ? null : reader.GetInt32(3)
             };
         }
 
@@ -68,8 +70,10 @@ namespace Api_bd.Repositories
             con.Open();
 
             string sql = @"
-                INSERT INTO AtribuicaoCurso (GestorId, CursoId)
-                VALUES (@GestorId, @CursoId);
+                INSERT INTO AtribuicaoCurso 
+                    (GestorId, CursoId, DepartamentoId)
+                VALUES 
+                    (@GestorId, @CursoId, @DepartamentoId);
                 SELECT SCOPE_IDENTITY();
             ";
 
@@ -77,6 +81,8 @@ namespace Api_bd.Repositories
 
             cmd.Parameters.AddWithValue("@GestorId", atrib.GestorId);
             cmd.Parameters.AddWithValue("@CursoId", atrib.CursoId);
+            cmd.Parameters.AddWithValue("@DepartamentoId",
+                atrib.DepartamentoId == null ? DBNull.Value : atrib.DepartamentoId);
 
             atrib.Id = Convert.ToInt32(cmd.ExecuteScalar());
             return atrib;
@@ -90,13 +96,16 @@ namespace Api_bd.Repositories
             string sql = @"
                 UPDATE AtribuicaoCurso SET 
                     GestorId = @GestorId,
-                    CursoId = @CursoId
+                    CursoId = @CursoId,
+                    DepartamentoId = @DepartamentoId
                 WHERE Id = @Id";
 
             using var cmd = new SqlCommand(sql, con);
 
             cmd.Parameters.AddWithValue("@GestorId", atrib.GestorId);
             cmd.Parameters.AddWithValue("@CursoId", atrib.CursoId);
+            cmd.Parameters.AddWithValue("@DepartamentoId",
+                atrib.DepartamentoId == null ? DBNull.Value : atrib.DepartamentoId);
             cmd.Parameters.AddWithValue("@Id", id);
 
             int rows = cmd.ExecuteNonQuery();

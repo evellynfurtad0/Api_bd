@@ -20,7 +20,8 @@ GO
 CREATE TABLE Departamento (
   Id INT IDENTITY(1,1) PRIMARY KEY,
   Nome VARCHAR(100) NOT NULL,
-  Descricao VARCHAR(100) NULL
+  Descricao VARCHAR(100) NULL,
+  GestorId INT NULL
 );
 
 CREATE TABLE DepartamentoUsuario (
