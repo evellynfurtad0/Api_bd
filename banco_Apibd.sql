@@ -95,12 +95,3 @@ CREATE TABLE AtribuicaoCurso (
     
     CONSTRAINT FK_AtribuicaoCurso_Departamento FOREIGN KEY (DepartamentoId) REFERENCES Departamento(Id)
 );
-
-SELECT * FROM Curso;
-
-
--- INSERT INTO Departamento (Nome, Descricao)
--- VALUES ('TI', 'Departamento de Tecnologia');
-
--- INSERT INTO ProgressoCurso (Usuarios_SistemaId, CursoId, ModuloId, AulaId, Status)
--- VALUES (3002, 1, 1, 1, 'Em andamento');

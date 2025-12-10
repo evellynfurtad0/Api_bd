@@ -8,6 +8,8 @@ namespace Api_bd.Repositories
     {
         List<Departamento> GetAll();
         Departamento? GetById(int id);
+        Departamento Create(Departamento dep);
+        Departamento? Update(int id, Departamento dep);
     }
 
     public class DepartamentoRepository : IDepartamentoRepository
@@ -60,6 +62,51 @@ namespace Api_bd.Repositories
                 Descricao = reader.IsDBNull(2) ? null : reader.GetString(2),
                 GestorId = reader.IsDBNull(3) ? null : reader.GetInt32(3)
             };
+        }
+
+        public Departamento Create(Departamento dep)
+        {
+            using var con = new SqlConnection(_connectionString);
+            con.Open();
+
+            string sql = @"
+                INSERT INTO Departamento (Nome, Descricao, GestorId)
+                VALUES (@Nome, @Descricao, @GestorId);
+                SELECT SCOPE_IDENTITY();
+            ";
+
+            using var cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@Nome", dep.Nome);
+            cmd.Parameters.AddWithValue("@Descricao", (object?)dep.Descricao ?? System.DBNull.Value);
+            cmd.Parameters.AddWithValue("@GestorId", (object?)dep.GestorId ?? System.DBNull.Value);
+
+            dep.Id = Convert.ToInt32(cmd.ExecuteScalar());
+            return dep;
+        }
+
+        public Departamento? Update(int id, Departamento dep)
+        {
+            using var con = new SqlConnection(_connectionString);
+            con.Open();
+
+            string sql = @"
+                UPDATE Departamento
+                SET Nome = @Nome,
+                    Descricao = @Descricao,
+                    GestorId = @GestorId
+                WHERE Id = @Id
+            ";
+
+            using var cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@Nome", dep.Nome);
+            cmd.Parameters.AddWithValue("@Descricao", (object?)dep.Descricao ?? System.DBNull.Value);
+            cmd.Parameters.AddWithValue("@GestorId", (object?)dep.GestorId ?? System.DBNull.Value);
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            int rows = cmd.ExecuteNonQuery();
+            if (rows == 0) return null;
+
+            return dep;
         }
     }
 }

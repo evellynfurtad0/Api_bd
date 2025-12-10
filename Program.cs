@@ -67,6 +67,7 @@ builder.Services.AddScoped<IDashboardFuncionarioService, DashboardFuncionarioSer
 builder.Services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
 builder.Services.AddScoped<IGestorDashboardService, GestorDashboardService>();
 builder.Services.AddScoped<IDepartamentoUsuarioRepository, DepartamentoUsuarioRepository>();
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
 
 var app = builder.Build();

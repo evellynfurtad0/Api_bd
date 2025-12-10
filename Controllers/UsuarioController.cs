@@ -63,7 +63,7 @@ namespace Api_bd.Controllers
             return Ok(result.Usuario);
         }
 
-        [Authorize(Roles = "Admin,Gestor")]
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Usuario usuario)
         {

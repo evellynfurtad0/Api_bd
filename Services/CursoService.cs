@@ -46,7 +46,7 @@ public class CursoService : ICursoService
                 CursoId = curso.Id
             });
 
-            // Cria aulas do
+            // Cria aulas do banco
             foreach (var aula in mod.Aulas)
             {
                 _aulaRepo.Create(new Aula

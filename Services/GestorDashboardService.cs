@@ -177,5 +177,20 @@ namespace Api_bd.Services
                 CursosConcluidos = concluidos
             };
         }
+
+        public (bool Success, string? Error) AssumirDepartamento(int gestorId, int departamentoId)
+        {
+            var dep = _departamentoRepo.GetById(departamentoId);
+            if (dep == null)
+                return (false, "Departamento não encontrado.");
+
+            dep.GestorId = gestorId;
+
+            var updated = _departamentoRepo.Update(departamentoId, dep);
+            if (updated == null)
+                return (false, "Erro ao atualizar o departamento.");
+
+            return (true, null);
+        }
     }
 }
