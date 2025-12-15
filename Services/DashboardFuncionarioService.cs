@@ -12,19 +12,25 @@ namespace Api_bd.Services
         private readonly IProgressoCursoRepository _progressoRepo;
         private readonly IDepartamentoUsuarioRepository _departUsuarioRepo;
         private readonly IAtribuicaoCursoRepository _atribuicaoRepo;
+        private readonly IModuloRepository _moduloRepo;
+        private readonly IAulaRepository _aulaRepo;
 
         public DashboardFuncionarioService(
             IInscricaoRepository inscricaoRepo,
             ICursoRepository cursoRepo,
             IProgressoCursoRepository progressoRepo,
             IDepartamentoUsuarioRepository departUsuarioRepo,
-            IAtribuicaoCursoRepository atribuicaoRepo)
+            IAtribuicaoCursoRepository atribuicaoRepo,
+            IModuloRepository moduloRepo,
+            IAulaRepository aulaRepo)
         {
             _inscricaoRepo = inscricaoRepo;
             _cursoRepo = cursoRepo;
             _progressoRepo = progressoRepo;
             _departUsuarioRepo = departUsuarioRepo;
             _atribuicaoRepo = atribuicaoRepo;
+            _moduloRepo = moduloRepo;
+            _aulaRepo = aulaRepo;
         }
 
         // Cursos que o funcionário está inscrito
@@ -103,6 +109,49 @@ namespace Api_bd.Services
             return (true, null);
         }
 
+        public (bool Success, string? Error, object? Data) GetConteudoCurso(int usuarioId, int cursoId)
+        {
+            var inscrito = _inscricaoRepo.GetAll()
+                .Any(i => i.Usuarios_SistemaId == usuarioId && i.CursoId == cursoId);
+
+            if (!inscrito)
+                return (false, "Usuário não está inscrito no curso.", null);
+
+            var curso = _cursoRepo.GetById(cursoId);
+            if (curso == null)
+                return (false, "Curso não encontrado.", null);
+
+            var modulos = _moduloRepo.GetByCursoId(cursoId);
+            var aulas = _aulaRepo.GetAll();
+
+            var data = new
+            {
+                CursoId = curso.Id,
+                Titulo = curso.Titulo,
+                Descricao = curso.Descricao,
+                Modulos = modulos
+                    .OrderBy(m => m.Ordem)
+                    .Select(m => new
+                    {
+                        ModuloId = m.Id,
+                        Titulo = m.Titulo,
+                        Ordem = m.Ordem,
+                        Aulas = aulas
+                            .Where(a => a.ModuloId == m.Id)
+                            .OrderBy(a => a.Ordem)
+                            .Select(a => new
+                            {
+                                AulaId = a.Id,
+                                Titulo = a.Titulo,
+                                Conteudo = a.Conteudo,                                ChaveVideo = a.ChaveVideo,
+                                Ordem = a.Ordem
+                            })
+                    })
+            };
+
+            return (true, null, data);
+        }
+        
         public (bool Success, string? Error) IniciarCurso(int usuarioId, int cursoId)
         {
             // Verifica se está inscrito

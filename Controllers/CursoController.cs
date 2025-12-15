@@ -14,7 +14,7 @@ public class CursoController : ControllerBase
     }
 
     [Authorize(Roles = "Admin,Gestor")]
-    [HttpPost("criar-completo")]
+    [HttpPost("criar-curso")]
     public IActionResult CriarCurso([FromBody] CreateCursoDto dto)
     {
         // pega id do usuário do token

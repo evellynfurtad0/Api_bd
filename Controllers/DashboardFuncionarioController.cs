@@ -57,6 +57,19 @@ namespace Api_bd.Controllers
             return Ok(new { mensagem = "Curso iniciado com sucesso." });
         }
 
+        [HttpGet("curso/{cursoId}/conteudo")]
+        public IActionResult ConteudoCurso(int cursoId)
+        {
+            var userId = int.Parse(User.FindFirst("id")!.Value);
+
+            var result = _dashboardService.GetConteudoCurso(userId, cursoId);
+
+            if (!result.Success)
+                return BadRequest(new { erro = result.Error });
+
+            return Ok(result.Data);
+        }
+
         [HttpGet("metricas")]
         public IActionResult Metricas()
         {

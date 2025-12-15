@@ -122,5 +122,35 @@ namespace Api_bd.Repositories
 
             return cmd.ExecuteNonQuery() > 0;
         }
+        public List<Modulo> GetByCursoId(int cursoId)
+        {
+            List<Modulo> modulos = new();
+
+            using var con = new SqlConnection(_connectionString);
+            con.Open();
+
+            string sql = @"SELECT Id, Titulo, Ordem, CursoId
+                        FROM Modulo
+                        WHERE CursoId = @CursoId
+                        ORDER BY Ordem";
+
+            using var cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@CursoId", cursoId);
+
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                modulos.Add(new Modulo
+                {
+                    Id = reader.GetInt32(0),
+                    Titulo = reader.GetString(1),
+                    Ordem = reader.GetInt32(2),
+                    CursoId = reader.GetInt32(3)
+                });
+            }
+
+            return modulos;
+        }
     }
 }

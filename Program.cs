@@ -68,6 +68,8 @@ builder.Services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
 builder.Services.AddScoped<IGestorDashboardService, GestorDashboardService>();
 builder.Services.AddScoped<IDepartamentoUsuarioRepository, DepartamentoUsuarioRepository>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+builder.Services.AddScoped<IModuloRepository, ModuloRepository>();
+builder.Services.AddScoped<IAulaRepository, AulaRepository>();
 
 
 var app = builder.Build();

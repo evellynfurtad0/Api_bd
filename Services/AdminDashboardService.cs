@@ -29,7 +29,6 @@ namespace Api_bd.Services
         {
             return _cursoRepo.GetAll()
                 .OrderByDescending(c => c.Id)
-                .Take(10)
                 .ToList();
         }
 
