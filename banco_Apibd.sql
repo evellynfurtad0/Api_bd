@@ -11,6 +11,7 @@ CREATE TABLE Usuarios_Sistema (
     Email NVARCHAR(100) NOT NULL UNIQUE,
     CPF VARCHAR(14) NULL,
     DataNascimento DATE NULL,
+    Perfil INT NULL,
     GestorId INT NULL,
     CONSTRAINT FK_Usuarios_Gestor 
     FOREIGN KEY (GestorId) REFERENCES Usuarios_Sistema(Id)
@@ -95,4 +96,3 @@ CREATE TABLE AtribuicaoCurso (
     
     CONSTRAINT FK_AtribuicaoCurso_Departamento FOREIGN KEY (DepartamentoId) REFERENCES Departamento(Id)
 );
-
