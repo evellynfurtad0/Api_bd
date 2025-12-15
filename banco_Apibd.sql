@@ -74,8 +74,8 @@ CREATE TABLE Inscricao (
 CREATE TABLE ProgressoCurso (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Usuarios_SistemaId INT NOT NULL,
-    CursoId INT NOT NULL,
-    ModuloId INT NOT NULL,
+    CursoId INT NULL,
+    ModuloId INT NULL,
     AulaId INT NOT NULL,
     Status VARCHAR(20) NOT NULL,
 
@@ -95,3 +95,4 @@ CREATE TABLE AtribuicaoCurso (
     
     CONSTRAINT FK_AtribuicaoCurso_Departamento FOREIGN KEY (DepartamentoId) REFERENCES Departamento(Id)
 );
+
