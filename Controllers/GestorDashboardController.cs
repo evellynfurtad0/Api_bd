@@ -21,14 +21,14 @@ namespace Api_bd.Controllers
             return int.Parse(User.FindFirst("id")!.Value);
         }
 
-        [HttpGet("departamentos")]
+        [HttpGet("departamento")]
         public IActionResult GetDepartamentos()
         {
             var gestorId = GetGestorId();
             return Ok(_service.GetDepartamentosGerenciados(gestorId));
         }
 
-        [HttpPost("departamento/{departamentoId}/adicionar-usuario/{usuarioId}")]
+        [HttpPost("departamento/{departamentoId}/adicionar-usuario-no-departamento/{usuarioId}")]
         public IActionResult AdicionarUsuarioNoDepartamento(int departamentoId, int usuarioId)
         {
             var result = _service.AdicionarUsuarioAoDepartamento(departamentoId, usuarioId);
@@ -36,7 +36,7 @@ namespace Api_bd.Controllers
             return Ok("Usuário adicionado ao departamento.");
         }
 
-        [HttpPost("atribuir-curso")]
+        [HttpPost("atribuir-curso-departamento")]
         public IActionResult AtribuirCurso([FromQuery] int cursoId, [FromQuery] int departamentoId)
         {
             var gestorId = GetGestorId();

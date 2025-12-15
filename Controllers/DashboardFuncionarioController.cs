@@ -17,8 +17,8 @@ namespace Api_bd.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet("cursos-em-andamento")]
-        public IActionResult CursosEmAndamento()
+        [HttpGet("cursos-inscritos")]
+        public IActionResult CursosInscritos()
         {
             var userId = int.Parse(User.FindFirst("id")!.Value);
             var cursos = _dashboardService.GetCursosEmAndamento(userId);
@@ -42,6 +42,19 @@ namespace Api_bd.Controllers
                 return BadRequest(new { erro = result.Error });
 
             return Ok(new { mensagem = "Inscrição realizada com sucesso." });
+        }
+
+        [HttpPost("iniciar/{cursoId}")]
+        public IActionResult IniciarCurso(int cursoId)
+        {
+            var userId = int.Parse(User.FindFirst("id")!.Value);
+
+            var result = _dashboardService.IniciarCurso(userId, cursoId);
+
+            if (!result.Success)
+                return BadRequest(new { erro = result.Error });
+
+            return Ok(new { mensagem = "Curso iniciado com sucesso." });
         }
 
         [HttpGet("metricas")]

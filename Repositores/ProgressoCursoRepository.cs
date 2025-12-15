@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using System.Data;
 using Microsoft.Extensions.Configuration;
 
 namespace Api_bd.Repositories
@@ -32,8 +33,8 @@ namespace Api_bd.Repositories
                     Id = reader.GetInt32(0),
                     Usuarios_SistemaId = reader.GetInt32(1),
                     CursoId = reader.GetInt32(2),
-                    ModuloId = reader.GetInt32(3),
-                    AulaId = reader.GetInt32(4),
+                    ModuloId = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+                    AulaId = reader.IsDBNull(4) ? null : reader.GetInt32(4),
                     Status = reader.GetString(5)
                 });
             }
@@ -74,18 +75,29 @@ namespace Api_bd.Repositories
             con.Open();
 
             string sql = @"
-                INSERT INTO ProgressoCurso (Usuarios_SistemaId, CursoId, ModuloId, AulaId, Status)
-                VALUES (@Usuarios_SistemaId, @CursoId, @ModuloId, @AulaId, @Status);
+                INSERT INTO ProgressoCurso 
+                (Usuarios_SistemaId, CursoId, ModuloId, AulaId, Status)
+                VALUES 
+                (@Usuarios_SistemaId, @CursoId, @ModuloId, @AulaId, @Status);
                 SELECT SCOPE_IDENTITY();
             ";
 
             using var cmd = new SqlCommand(sql, con);
 
-            cmd.Parameters.AddWithValue("@Usuarios_SistemaId", progresso.Usuarios_SistemaId);
-            cmd.Parameters.AddWithValue("@CursoId", progresso.CursoId);
-            cmd.Parameters.AddWithValue("@ModuloId", progresso.ModuloId);
-            cmd.Parameters.AddWithValue("@AulaId", progresso.AulaId);
-            cmd.Parameters.AddWithValue("@Status", progresso.Status);
+            cmd.Parameters.Add("@Usuarios_SistemaId", SqlDbType.Int)
+                .Value = progresso.Usuarios_SistemaId;
+
+            cmd.Parameters.Add("@CursoId", SqlDbType.Int)
+                .Value = progresso.CursoId;
+
+            cmd.Parameters.Add("@ModuloId", SqlDbType.Int)
+                .Value = (object?)progresso.ModuloId ?? DBNull.Value;
+
+            cmd.Parameters.Add("@AulaId", SqlDbType.Int)
+                .Value = (object?)progresso.AulaId ?? DBNull.Value;
+
+            cmd.Parameters.Add("@Status", SqlDbType.VarChar)
+                .Value = progresso.Status;
 
             progresso.Id = Convert.ToInt32(cmd.ExecuteScalar());
             return progresso;

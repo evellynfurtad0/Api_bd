@@ -155,7 +155,11 @@ namespace Api_bd.Services
 
             int membros = usuariosIds.Count;
             int cursosEquipe = inscricoes.Select(i => i.CursoId).Distinct().Count();
-            int concluidos = progressos.Count(p => p.Status == "Concluído");
+            int concluidos = progressos
+                .Where(p => p.Status == "Concluído")
+                .Select(p => new { p.Usuarios_SistemaId, p.CursoId })
+                .Distinct()
+                .Count();
 
             var medias = progressos
                 .GroupBy(p => p.Usuarios_SistemaId)

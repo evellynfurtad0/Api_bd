@@ -103,6 +103,34 @@ namespace Api_bd.Services
             return (true, null);
         }
 
+        public (bool Success, string? Error) IniciarCurso(int usuarioId, int cursoId)
+        {
+            // Verifica se está inscrito
+            var inscrito = _inscricaoRepo.GetAll()
+                .Any(i => i.Usuarios_SistemaId == usuarioId && i.CursoId == cursoId);
+
+            if (!inscrito)
+                return (false, "Usuário não está inscrito neste curso.");
+
+            //Verifica se já existe progresso
+            var jaIniciado = _progressoRepo.GetAll()
+                .Any(p => p.Usuarios_SistemaId == usuarioId && p.CursoId == cursoId);
+
+            if (jaIniciado)
+                return (false, "Curso já iniciado.");
+
+            //Cria progresso 
+            _progressoRepo.Create(new ProgressoCurso
+            {
+                Usuarios_SistemaId = usuarioId,
+                CursoId = cursoId,
+                ModuloId = null,
+                AulaId = null,
+                Status = "Em andamento"
+            });
+
+            return (true, null);
+        }
 
         public object GetMetricas(int usuarioId)
         {
@@ -114,27 +142,24 @@ namespace Api_bd.Services
                 .Where(p => p.Usuarios_SistemaId == usuarioId)
                 .ToList();
 
-            int matriculados = inscricoes.Count;
-
-            int cursosConcluidos = progressos
-                .GroupBy(p => p.CursoId)
-                .Count(g => g.All(p =>
-                    string.Equals(p.Status, "Concluído", StringComparison.OrdinalIgnoreCase)));
-
-            int cursosEmAndamento = Math.Max(0, matriculados - cursosConcluidos);
-
-            int horasEstimadas = progressos
-                .Where(p => string.Equals(p.Status, "Concluído", StringComparison.OrdinalIgnoreCase))
-                .Select(p => p.AulaId)
+            int cursosMatriculados = inscricoes
+                .Select(i => i.CursoId)
                 .Distinct()
                 .Count();
 
+            int cursosConcluidos = progressos
+                .Where(p => p.Status.Equals("Concluído", StringComparison.OrdinalIgnoreCase))
+                .Select(p => p.CursoId)
+                .Distinct()
+                .Count();
+
+            int cursosEmAndamento = cursosMatriculados - cursosConcluidos;
+
             return new
             {
-                CursosMatriculados = matriculados,
+                CursosMatriculados = cursosMatriculados,
                 CursosConcluidos = cursosConcluidos,
-                CursosEmAndamento = cursosEmAndamento,
-                HorasEstudo = horasEstimadas
+                CursosEmAndamento = cursosEmAndamento
             };
         }
     }
