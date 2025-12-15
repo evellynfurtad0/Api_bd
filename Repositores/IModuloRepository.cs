@@ -5,4 +5,5 @@ public interface IModuloRepository
     Modulo Create(Modulo modulo);
     Modulo? Update(int id, Modulo modulo);
     bool Delete(int id);
+    List<Modulo> GetByCursoId(int cursoId);
 }

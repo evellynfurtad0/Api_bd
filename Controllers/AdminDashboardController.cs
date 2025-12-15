@@ -16,7 +16,7 @@ namespace Api_bd.Controllers
             _service = service;
         }
 
-        [HttpGet("cursos-recentes")]
+        [HttpGet("todos-cursos")]
         public IActionResult GetCursosRecentes()
         {
             return Ok(_service.GetCursosRecentes());
